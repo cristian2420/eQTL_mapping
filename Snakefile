@@ -9,7 +9,7 @@ workdir: config['config']['workdir']
 
 class Table:
     def __init__(self, file):
-        self.data = pd.read_csv(file)
+        self.data = pd.read_csv(file, dtype=str)
     def extract(self, wildcards):
         #sel = datasets[ datasets["cell"] == wildcards.cell ]
         sel = self.data[ self.data["cell"] == wildcards.cell ]
@@ -76,6 +76,8 @@ rule expression_preprocess:
     params:
         script = "bin/general_run/process_expression.R",
         peerfactors_n = config["parameters"]["Factors"]
+    conda:
+        "DLCP.yaml"
     shell:
         "Rscript {params.script} -e {input.expFile} -d {input.donorFile} -q -o {output.exp_file} "
 
@@ -90,8 +92,10 @@ rule peer_calc:
         odir = "results/matrix_eqtl/covariates/{tissue}/{cell}/{subset}/" + GPREFIX + "/PEERanalysis/",
         run_var_genes = run_var_genes,
         n_genes = n_var_genes
+    conda:
+        "DLCP.yaml"
     shell:
-        "~/miniconda3/envs/peer/bin/python {params.script} {input.expression} {params.peerfactors_n} {params.odir} {params.run_var_genes} {params.n_genes} "
+        "python {params.script} {input.expression} {params.peerfactors_n} {params.odir} {params.run_var_genes} {params.n_genes} "
 
 rule subset_geno:
     input:
@@ -99,6 +103,8 @@ rule subset_geno:
         genotype = config["inpFiles"]["vcf_genotype"]
     output:
         temp("results/matrix_eqtl/covariates/{tissue}/{cell}/{subset}/genotype.vcf.gz")
+    conda:
+        "bcftools.yaml"
     shell:
         "bcftools view -S {input.donorFile} -Oz -o {output}  {input.genotype}"
 
@@ -157,6 +163,7 @@ rule matrix_eQTL:
     output:
         cis = "results/matrix_eqtl/eQTL/{tissue}/{cell}/{subset}/" + GPREFIX + "/{chrom}/Output_cis.txt",
         trans = "results/matrix_eqtl/eQTL/{tissue}/{cell}/{subset}/" + GPREFIX + "/{chrom}/Output_tra.txt",
+        dgfree = "results/matrix_eqtl/eQTL/{tissue}/{cell}/{subset}/" + GPREFIX + "/{chrom}/Output_df.txt",
         cis_all = "results/matrix_eqtl/eQTL/{tissue}/{cell}/{subset}/" + GPREFIX + "/{chrom}/Output_all_cis.txt",
         qqplot = "results/matrix_eqtl/eQTL/{tissue}/{cell}/{subset}/" + GPREFIX + "/{chrom}/Output_qqplot.png"
     params:
@@ -165,6 +172,8 @@ rule matrix_eQTL:
         MAF = config["parameters"]["MAF"],
         outputdir = "results/matrix_eqtl/eQTL/{tissue}/{cell}/{subset}/" + GPREFIX + "/{chrom}/",
         prefix = "Output"
+    conda:
+        "DLCP.yaml"
     shell:
         "Rscript {params.script}  --nullDist {params.null} --snpfile {input.snps} \
          --snplocation {input.snpsloc} --expressionfile {input.expression} \
@@ -182,6 +191,8 @@ rule eigenMT:
     params:
         script = "bin/general_run/eigenMT.py",
         chromosome = "{chrom}"
+    conda:
+        "pyEigenMT.yaml"
     shell:
         "python {params.script} --QTL {input.qtl} --GEN {input.snps} --GENPOS {input.snpsloc} --PHEPOS {input.geneloc} --OUT {output.eigen} --sample_list {input.donorFile} --CHROM {params.chromosome} "
 
@@ -202,6 +213,8 @@ rule null_distribution:
         MAF = config["parameters"]["MAF"],
         outputdir = "temp/matrix_eqtl/null_distr/{tissue}/{cell}/{subset}/" + GPREFIX + "/{chrom}/",
         prefix = "Output_{permutation}"
+    conda:
+        "DLCP.yaml"
     shell:
         "Rscript {params.script}  --nullDist {params.null} --snpfile {input.snps} "
         " --snplocation {input.snpsloc} --expressionfile {input.expression} "
@@ -216,6 +229,8 @@ rule merge_null:
         null = temp("results/matrix_eqtl/null_distr/{tissue}/{cell}/{subset}/" + GPREFIX + "/null_distr.tsv")
     params:
         Rfile = "bin/general_run/Merge_Results_null.R"
+    conda:
+        "DLCP.yaml"
     shell:
         "Rscript {params.Rfile} {input.null} {output.null}"
 
@@ -239,5 +254,7 @@ rule calculate_FDR:
         tra_name = "Output_tra.txt",
         eigen_results = "results/matrix_eqtl/eQTL/{tissue}/{cell}/{subset}/" + GPREFIX + "/",
         eigen_name = "Output_eigen_cis_sig.tsv"
+    conda:
+        "DLCP.yaml"
     shell:
         "Rscript {params.Rfile} -c {params.cis_results} -t {params.tra_results} -i {params.cis_name} -r {params.tra_name} -n {input.null} -o {params.prefix} -m {params.eigen_results} -e {params.eigen_name} "
