@@ -1,0 +1,18 @@
+inpFiles:
+  vcf_genotype: /path/to/vcf/file/cohort_MAF0.05_filtered.vcf.gz
+  datasets: /path/to/dataset/file/datasets.csv
+  covariates: /path/to/covariate/file/LungInfo_covariates.txt
+  snpfiles: '/path/file/of/snps/snps_chrs_files_maf0.05.txt'
+  geneannot: /path/to/annotation/DLCP_geneAnnot_hg38.matrixeQTL.txt
+
+parameters:
+  MAF: 0.05
+  PCS: 0
+  Factors: 0 # Peer Factors
+  permutations: 1000
+  covariates: [''] ## Names from general covariates separate by '-'. Eg. 'Gender-Age'
+  run_var_genes: False ## Run PEER factor analysis with only variable genes. True or False
+  n_var_genes: NA ### if 'run_var_genes' == True, 'n_var_genes' int > 0 & < number genes in the matrix. If 'run_var_genes' == False, 'n_var_genes' == NA
+
+config:
+  workdir: /path/to/work/eQTL_pipeline/
