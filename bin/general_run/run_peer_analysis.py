@@ -17,10 +17,12 @@ if n_genes != 'NA':
 #ifile='/mnt/bioadhoc-temp/Groups/vd-vijay/Cristian/DICE_LungCancer/eQTL_pipeline/data/expression/input/tumor/CD8/0/gene_expression.txt'
 #
 expr = pd.read_table(ifile)
+if ifile.endswith(".gz"):
+    expr = expr.iloc[:,3:]
+    expr = expr.set_index('TargetID')
 #####if no peer factors, it would be set to 1 just to run the analysis. THe pipeline will not take it into consideration
 if confounders == 0:
     confounders = 1
-
 ####
 donors =  list(expr.columns)
 genes =  list(expr.index.values)

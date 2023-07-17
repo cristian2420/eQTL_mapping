@@ -97,13 +97,13 @@ opt = parse_args(OptionParser(option_list=option_list))
 ##debug
 if(FALSE){
 	opt = list(
-		cispath = "results/matrix_eqtl/eQTL/healthy/CD4/0/MAF_0.05_covariates_genPCs0_expPEER0_VarGenesFalse_Ngenes_NA/",
-		trapath = "results/matrix_eqtl/eQTL/healthy/CD4/0/MAF_0.05_covariates_genPCs0_expPEER0_VarGenesFalse_Ngenes_NA/",
+		cispath = "results/matrix_eqtl/eQTL/tumor/B/2/MAF_0.05_covariatesGender-Age_genPCs1_expPEER2_VarGenesFalse_Ngenes_NA/",
+		trapath = "results/matrix_eqtl/eQTL/tumor/B/2/MAF_0.05_covariatesGender-Age_genPCs1_expPEER2_VarGenesFalse_Ngenes_NA/",
 		cisname = "Output_cis.txt",
 		traname = "Output_tra.txt",
-		null = "results/matrix_eqtl/null_distr/healthy/CD4/0/MAF_0.05_covariates_genPCs0_expPEER0_VarGenesFalse_Ngenes_NA/null_distr.tsv",
+		null = "results/matrix_eqtl/null_distr/tumor/B/2/MAF_0.05_covariatesGender-Age_genPCs1_expPEER2_VarGenesFalse_Ngenes_NA/null_distr.tsv",
 		eigenMT = "Output_eigen_cis_sig.tsv",
-		eigenMTpath = "results/matrix_eqtl/eQTL/healthy/CD4/0/MAF_0.05_covariates_genPCs0_expPEER0_VarGenesFalse_Ngenes_NA/",
+		eigenMTpath = "results/matrix_eqtl/eQTL/tumor/B/2/MAF_0.05_covariatesGender-Age_genPCs1_expPEER2_VarGenesFalse_Ngenes_NA/",
 		output = "Output"
 	)
 }
@@ -131,6 +131,7 @@ eigen <- data.table::rbindlist(lapply(chrs_vec, function(chr){
 }))
 eigen <- eigen[, c("gene", "BF", "TESTS")]
 eigen$BF.FDR <- p.adjust(eigen$BF, method = "fdr")
+eigen$pnominal_threshold <- eigen$pvalue*eigen$TESTS
 print("Calculating cis FDR")
 #pvaluesCis <- empPvals(stat = abs(as.numeric(cis$statistic)),
 #                       stat0 = abs(as.matrix(null)), pool = TRUE)

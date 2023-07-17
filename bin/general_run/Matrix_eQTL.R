@@ -34,12 +34,12 @@ opt = parse_args(OptionParser(option_list=option_list))
 ###Debug
 if(FALSE){
   opt <- list(nullDist = FALSE,
-              snpfile = "/mnt/bioadhoc-temp/Groups/vd-vijay/Cristian/DICE_LungCancer/eQTL_pipeline/data/genotyping/matrix_eQTL/snps/MAF_0.05/snp_22.txt",
-              snplocation = "/mnt/bioadhoc-temp/Groups/vd-vijay/Cristian/DICE_LungCancer/eQTL_pipeline/data/genotyping/matrix_eQTL/snpsloc/MAF_0.05/snppos_22.txt",
-              expressionfile = "/mnt/bioadhoc-temp/Groups/vd-vijay/Cristian/DICE_LungCancer/eQTL_pipeline/results/covariates/tumor/CD8/cell/GE.txt",
-              covariates = "/mnt/BioAdHoc/Groups/vd-vijay/Cristian/DICE_LungCancer/eQTL_pipeline/data/covariates/LungInfo_covariates.txt",
+              snpfile = "/mnt/bioadhoc-temp/Groups/vd-vijay/Cristian/DICE_LungCancer/eQTL_pipeline/data/genotyping/matrix_eQTL/snps/MAF_0.05/snp_1.txt",
+              snplocation = "/mnt/bioadhoc-temp/Groups/vd-vijay/Cristian/DICE_LungCancer/eQTL_pipeline/data/genotyping/matrix_eQTL/snpsloc/MAF_0.05/snppos_1.txt",
+              expressionfile = "results/matrix_eqtl/covariates/tumor/B/2/MAF_0.05_covariatesGender-Age_genPCs1_expPEER2_VarGenesFalse_Ngenes_NA/GE.txt",
+              covariates = "results/matrix_eqtl/covariates/tumor/B/2/MAF_0.05_covariatesGender-Age_genPCs1_expPEER2_VarGenesFalse_Ngenes_NA/covariates.txt",
               genelocation = "/mnt/BioAdHoc/Groups/vd-vijay/Cristian/DICE_LungCancer/eQTL_pipeline/data/geneAnnotation/DLCP_geneAnnot_hg38.matrixeQTL.txt",
-              MAF = 0.01, #default 0.05
+              MAF = 0.05, #default 0.05
               output = "genotype", #default ./genotype
               outdir = "/mnt/beegfs/cgonzalez/R24/") #default NULL
 }
@@ -79,6 +79,7 @@ cat("########################################################\n")
 # Output file name
 dir.create(opt$outdir, recursive = T, showWarnings = F)
 output_file_name_cis <- file.path(opt$outdir, paste0(opt$output, "_cis.txt"))
+output_file_name_df <- file.path(opt$outdir, paste0(opt$output, "_df.txt"))
 output_file_name_tra <- file.path(opt$outdir, paste0(opt$output, "_tra.txt"))
 output_file_name_qqplot <- file.path(opt$outdir, paste0(opt$output, "_qqplot.png"))
 output_file_name_all_cis <- file.path(opt$outdir, paste0(opt$output, "_all_cis.txt"))
@@ -241,6 +242,7 @@ cat('Analysis done in: ', me$time.in.sec, ' seconds', '\n')
 # #show(me$cis$eqtls)
 # cat('Detected distant eQTLs:', '\n');
 #show(me$trans$eqtls)
+cat(file=output_file_name_df, "DF:\t", me$param$dfFull, "\n", append=TRUE);
 
 if(!nullDist) {
 	cat('Saving all cis-eQTLs\n')

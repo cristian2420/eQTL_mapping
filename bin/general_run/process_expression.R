@@ -17,7 +17,8 @@ Sys.setenv(RETICULATE_PYTHON = "~/miniconda3/bin/python") # line added due to a 
 library(reticulate)
 library(edgeR)
 # Important: a part from the MOFA2 R package, you also need the python package mofa2 to be installed
-library(MOFA2)
+# library(MOFA2)
+library(matrixStats)
 library(data.table)
 
 #######
@@ -77,6 +78,11 @@ donorFile <- readLines(opt$donorFile)
 expFile <- read.table(opt$expFile, header = T, check.names = F, row.names = 1)
 ####filter donors
 expFile <- expFile[, c(donorFile)]
+######
+if(opt$fastqtl){
+  var_genes <- matrixStats::rowVars(as.matrix(expFile))
+  expFile <- expFile[var_genes > 0.0001,]
+}
 ####normalization
 y <- DGEList(expFile)
 #/ calculate TMM normalization factors:
@@ -84,7 +90,7 @@ y <- calcNormFactors(y)
 #/ get the normalized counts if needed
 cpms <- cpm(y, log=FALSE)
 if(opt$quantileNorm){
-  
+
   mat = t(apply(cpms, 1, rank, ties.method = "average"));
   mat = qnorm(mat / (ncol(cpms)+1));
   cpms = mat
@@ -103,12 +109,12 @@ if(opt$fastqtl){
   mat <- mat[, c(header_order, comp_names)]
   ##ordering and removing non-canonical chromosome for compatibilities with genotyping
   mat <- mat[order(mat[,1], mat[,2]),]
-###    mat <- mat[mat[,1] %in% c(1:22, 'X', 'Y'),]
-  mat <- mat[mat[,1] %in% c(1:22),]
+  mat <- mat[mat[,1] %in% c(1:22, 'X'),]
+  #mat <- mat[mat[,1] %in% c(1:22),]
 
   write.table(mat, opt$outputFile, quote = F, sep = "\t", row.names = F)
-  system(paste0('bgzip ', opt$outputFile))
-  system(paste0('tabix -f -p bed ', opt$outputFile, '.gz'))
+#  system(paste0('bgzip ', opt$outputFile))
+#  system(paste0('tabix -f -p bed ', opt$outputFile, '.gz'))
 }else{
   write.table(cpms, opt$outputFile, quote = F, sep = "\t")
 }

@@ -38,7 +38,8 @@ if(FALSE){
     factors = 0,
     pcs = 0,
     covariates = 'Gender',
-    output = ""
+    output = "",
+    fastqtl = FALSE
   )
 }
 ##
@@ -52,13 +53,13 @@ if(is.na(opt$covariates)){
 }
 
 ##
-pcaFile <- read.table(opt$pcafile, header = T)
+pcaFile <- read.table(opt$pcafile, header = T, check.names = F)
 pcaFile$FID <- NULL
 pcaname <- pcaFile[,1]
 pca <- data.frame(t(pcaFile[,-1]))
 colnames(pca) <- pcaname
 if(nrow(pca) < opt$pcs) stop("Number of PCs to use greater than PCs in the pca file\n")
-pca <- pca[1:opt$pcs, ]
+pca <- data.frame(pca[1:opt$pcs, ], check.names = F)
 ############ Try to use the specified peer factos but if not have enough it used the maximum calculated that are less than the specified
 if(!is.na(opt$factorfile)){
   peerFile <- read.csv(opt$factorfile, header = T)

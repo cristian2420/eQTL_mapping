@@ -234,7 +234,7 @@ def bf_eigen_windows(test_dict, gen_dict, phepos_dict, OUT_fh, input_header, var
     for gene in genes:
         perc = (100 * counter / numgenes)
         if (counter % 100) == 0:
-            print(str(counter) + ' out of ' + str(numgenes) + ' completed ' + '(' + str(round(perc, 3)) + '%)', flush=True)
+            print(str(counter) + ' out of ' + str(numgenes) + ' completed ' + '(' + str(round(perc, 3)) + '%)')#, flush=True)
         counter += 1
         snps = np.sort(test_dict[gene]['snps'])
         start = 0
@@ -327,15 +327,15 @@ if __name__=='__main__':
     args = parser.parse_args()
 
     ##Make SNP position dict
-    print('Processing genotype position file.', flush=True)
+    print('Processing genotype position file.')#, flush=True)
     genpos_dict = make_genpos_dict(args.GENPOS, args.CHROM)
 
     ##Make phenotype position dict
-    print('Processing phenotype position file.', flush=True)
+    print('Processing phenotype position file.')#, flush=True)
     phepos_dict = make_phepos_dict(args.PHEPOS, args.CHROM)
 
     ##Make genotype dict
-    print('Processing genotype matrix.', flush=True)
+    print('Processing genotype matrix.')#, flush=True)
     if args.sample_list is not None:
         with open(args.sample_list) as f:
             sample_ids = f.read().strip().split('\n')
@@ -347,7 +347,7 @@ if __name__=='__main__':
     ##Make SNP-gene test dict
     if not args.external:
         if args.QTL.endswith('.parquet'):
-            print('Processing tensorQTL tests file.', flush=True)
+            print('Processing tensorQTL tests file.')#, flush=True)
             if args.phenotype_groups is not None:
                 group_s = pd.read_csv(args.phenotype_groups, sep='\t', index_col=0, header=None, squeeze=True)
                 group_size_s = group_s.value_counts()
@@ -355,12 +355,12 @@ if __name__=='__main__':
                 group_size_s = None
             test_dict, input_header = make_test_dict_tensorqtl(args.QTL, gen_dict, genpos_dict, args.cis_dist, group_size_s=group_size_s)
         else:
-            print('Processing Matrix-eQTL tests file.', flush=True)
+            print('Processing Matrix-eQTL tests file.')#, flush=True)
             test_dict, input_header = make_test_dict(args.QTL, gen_dict, genpos_dict, phepos_dict, args.cis_dist)
     else:
         print('Processing Matrix-eQTL tests file. External genotype matrix and position file assumed.', flush=True)
         test_dict, input_header = make_test_dict_external(args.QTL, gen_dict, genpos_dict, phepos_dict, args.cis_dist)
 
     ##Perform BF correction using eigenvalue decomposition of the correlation matrix
-    print('Performing eigenMT correction.', flush=True)
+    print('Performing eigenMT correction.')#, flush=True)
     bf_eigen_windows(test_dict, gen_dict, phepos_dict, args.OUT, input_header, args.var_thresh, args.window)
