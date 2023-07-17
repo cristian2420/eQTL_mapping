@@ -3,13 +3,13 @@ inpFiles:
   datasets: /path/to/dataset/file/datasets.csv
   covariates: /path/to/covariate/file/LungInfo_covariates.txt
   snpfiles: '/path/file/of/snps/snps_chrs_files_maf0.05.txt'
-  geneannot: /path/to/annotation/DLCP_geneAnnot_hg38.matrixeQTL.txt
+  geneannot: /path/to/annotation/geneAnnot_hg38.matrixeQTL.txt
 
 parameters:
   MAF: 0.05
-  PCS: 0
-  Factors: 0 # Peer Factors
-  permutations: 1000
+  PCS: 0 ## Genotype PCs
+  Factors: 0 # Peer Factors from Gene expression
+  permutations: 1000 ### For permutation test. Running 1000 could take several hrs. To speed up and use only the EigenMT correction set permutations to 1.
   covariates: [''] ## Names from general covariates separate by '-'. Eg. 'Gender-Age'
   run_var_genes: False ## Run PEER factor analysis with only variable genes. True or False
   n_var_genes: NA ### if 'run_var_genes' == True, 'n_var_genes' int > 0 & < number genes in the matrix. If 'run_var_genes' == False, 'n_var_genes' == NA
