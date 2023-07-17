@@ -1,4 +1,4 @@
-# UNDER CONSTRUCTION: eQTL Mapping Pipeline
+# eQTL Mapping Pipeline
 
 ------
 * Cristian Gonzalez-Colin (cgonzalez@lji.org)
@@ -59,7 +59,13 @@ Pipeline runs multiple clusters per cell in parallel. To do that a data set .csv
 
 File was prepared following matrix eQTL [toy dataset](http://www.bios.unc.edu/research/genomic_software/Matrix_eQTL/Sample_Data/geneloc.txt).
 
+### NOTES
 
+The ```bin/``` folder needs to be copy to the working directory.
+
+The ```pbs_submit.sh``` file shows and example of how the pipeline was run.
+
+Please cite the following manuscript if you are using this repository:
 
 ## Contact
 

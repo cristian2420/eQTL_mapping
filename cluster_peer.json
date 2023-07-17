@@ -1,0 +1,42 @@
+{
+    "__default__" :
+    {
+        "walltime" : "02:00:00",
+        "cores" : "nodes=1:ppn=1",
+        "memory" : "30g",
+        "output" : "{rule}.{jobid}.{wildcards}.out",
+        "error" : "{rule}.{jobid}.{wildcards}.err"
+    },
+    "peer_calc" :
+    {
+      "walltime" : "32:00:00",
+      "cores" : "nodes=1:ppn=1",
+      "memory" : "30g",
+      "output" : "{rule}.{jobid}.{wildcards}.out",
+      "error" : "{rule}.{jobid}.{wildcards}.err"
+    },
+    "matrix_eQTL" :
+    {
+      "walltime" : "02:00:00",
+      "cores" : "nodes=1:ppn=1",
+      "memory" : "30g",
+      "output" : "{rule}.{jobid}.{wildcards}.out",
+      "error" : "{rule}.{jobid}.{wildcards}.err"
+    },
+    "null_distribution" :
+    {
+      "walltime" : "01:00:00",
+      "cores" : "nodes=1:ppn=1",
+      "memory" : "30g",
+      "output" : "{rule}.{jobid}.{wildcards}.out",
+      "error" : "{rule}.{jobid}.{wildcards}.err"
+    },
+    "eigenMT" :
+    {
+      "walltime" : "01:00:00",
+      "cores" : "nodes=1:ppn=1",
+      "memory" : "20g",
+      "output" : "{rule}.{jobid}.{wildcards}.out",
+      "error" : "{rule}.{jobid}.{wildcards}.err"
+    }
+}
